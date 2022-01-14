@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+{% block content %}
+    {% if score!=-2 %}
+    <div class="jumbotron bg">
+      <h1 class="display-4">Audience Response!</h1>
+      <p class="lead">Find out how your post was received by our peers!</p>
+      <hr class="my-4">
+    </div>
+
+<!--     <div class="jumbotron bg">
+      <h4>Comments</h4>
+      <hr class="my-4">
+      <br> 
+      <ul class="list-group">
+        {% if comments %}
+         <h2>Hi</h2> 
+          {% for comm in comments %}
+          <li class="pcom list-group-item">{{comm.comment}}</li>
+          {% endfor %}
+        {% else %}
+        <p>No comments yet!</p>
+        {% endif %}
+      </ul>
+    </div> -->
+
+
+    <div class="jumbotron bg">
+      <h2 class="display-5">Your Posts</h2>
+      <!-- <p class="lead">Find out how your post was received by our peers!</p> -->
+      <hr class="my-4">
+
+      {% for post,s,f1 in data %}
+        <article class="media content-section" id="analysis">
+          <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="{{ url_for('user_posts', username=post.author.username) }}">{{ post.author.username }}</a>
+              <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+            </div>
+            <h2><a class="article-title" href="{{ url_for('post', post_id=post.id) }}">{{ post.title }}</a></h2>
+            <hr class="my-4">
+            {% if f1 %}
+              <h4>Score: {{"%.2f"|format(((s+1)/2)*100)}}%</h4>
+            {% else %}
+              <h4>No comments yet!</h4>
+            {% endif %}
+
+            <!-- <p class="article-content">{{ post.content }}</p> -->
+          </div>
+        </article>
+    {% endfor %}
+    </div>
+
+    <div class="jumbotron bg">
+      <h2 class="display-5">Overall Response</h2>
+      <hr class="my-4">
+      <br> 
+      {% if score >= 0 %}
+        <h4>You have received a whooping {{"%.2f"|format(((score+1)/2)*100)}}%!! </h4>
+        <h4>Keep it up!</h4>
+      {% else %}
+        <h4>You have received {{"%.2f"|format(((score+1)/2)*100)}}%</h4>
+        <h4>Remember Rome wasn't built in a day!</h4>
+      {% endif %}
+    </div>
+    {% else %}
+    <div class="jumbotron bg">
+      <h2 class="display-5">No posts to analyze yet :(</h2>
+      <hr class="my-4">
+    </div>
+    {% endif %}
+{% endblock content %}
